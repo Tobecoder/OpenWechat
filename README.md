@@ -14,7 +14,7 @@
 ## 安装
 
 ```shell
-composer require "sinre/wechat:~1.0" -vvv
+composer require "sinre/openwechat:~1.0" -vvv
 ```
 
 ## 贡献代码
