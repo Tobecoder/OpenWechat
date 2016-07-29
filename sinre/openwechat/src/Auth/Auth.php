@@ -79,4 +79,5 @@ class Auth extends AbstractAPI
         $access_token = $this->container->access_token->getCacheToken();
         return $this->container->authorizer_access_token->getToken($authorizer_appid, $access_token, $forceRefresh);
     }
+
 }

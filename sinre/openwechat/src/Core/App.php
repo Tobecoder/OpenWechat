@@ -35,6 +35,7 @@ class App extends Container
         ServiceProviders\ServerServiceProvider::class,
         ServiceProviders\AuthServiceProvider::class,
         ServiceProviders\AuthorizerServiceProvider::class,
+        ServiceProviders\QuotaServiceProvider::class,
     ];
 
     /**
