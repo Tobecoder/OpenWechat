@@ -25,7 +25,44 @@ class Wxcrypt
         $this->encodingAesKey = $encodingAesKey;
         $this->appId = $appId;
     }
+    /**
+	*验证URL
+    *@param sMsgSignature: 签名串，对应URL参数的msg_signature
+    *@param sTimeStamp: 时间戳，对应URL参数的timestamp
+    *@param sNonce: 随机串，对应URL参数的nonce
+    *@param sEchoStr: 随机串，对应URL参数的echostr
+    *@param sReplyEchoStr: 解密之后的echostr，当return返回0时有效
+    *@return：成功0，失败返回对应的错误码
+	*/
+    public function VerifyURL($sMsgSignature, $sTimeStamp, $sNonce, $sEchoStr, &$sReplyEchoStr)
+    {
+        if (strlen($this->encodingAesKey) != 43) {
+            return ErrorCode::$IllegalAesKey;
+        }
 
+        $pc = new Prpcrypt($this->encodingAesKey);
+        //verify msg_signature
+        $sha1 = new SHA1;
+        $array = $sha1->getSHA1($this->token, $sTimeStamp, $sNonce, $sEchoStr);
+        $ret = $array[0];
+
+        if ($ret != 0) {
+            return $ret;
+        }
+
+        $signature = $array[1];
+        if ($signature != $sMsgSignature) {
+            return ErrorCode::$ValidateSignatureError;
+        }
+
+        $result = $pc->decrypt($sEchoStr, $this->m_sCorpid);
+        if ($result[0] != 0) {
+            return $result[0];
+        }
+        $sReplyEchoStr = $result[1];
+
+        return ErrorCode::$OK;
+    }
     /**
      * 将公众平台回复用户的消息加密打包.
      * <ol>
