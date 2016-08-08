@@ -38,6 +38,7 @@ class App extends Container
         ServiceProviders\QuotaServiceProvider::class,
         ServiceProviders\OauthServiceProvider::class,
         ServiceProviders\MessageServiceProvider::class,
+        ServiceProviders\UserServiceProvider::class,
     ];
 
     /**
