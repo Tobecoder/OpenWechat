@@ -39,6 +39,7 @@ class App extends Container
         ServiceProviders\OauthServiceProvider::class,
         ServiceProviders\MessageServiceProvider::class,
         ServiceProviders\UserServiceProvider::class,
+        ServiceProviders\JsApiServiceProvider::class,
     ];
 
     /**
