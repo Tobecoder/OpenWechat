@@ -21,17 +21,19 @@ class EventNotice extends AbstractAPI
 
     /**
      * 授权通知统一处理接口
-     * @param string $msg_signature 消息签名
-     * @param int $timestamp 时间戳
-     * @param int $nonce
-     * @param string $encryptMsg 加密消息
      * @return bool|\OpenWechat\Core\Collection
      */
-    public function notice($msg_signature, $timestamp, $nonce, $encryptMsg)
+    public function notice()
     {
         $result = '';
         $decryptMsg = '';
-        $errCode = $this->container->wxcrypt->decryptMsg($msg_signature, $timestamp, $nonce, $encryptMsg, $decryptMsg);
+        $errCode = $this->container->wxcrypt->decryptMsg(
+            $this->container->request->get('msg_signature'),
+            $this->container->request->get('timestamp'),
+            $this->container->request->get('nonce'),
+            $this->container->request->getContent(false),
+            $decryptMsg
+        );
         if(!$errCode){//成功解密
             $this->container->xml->setXml($decryptMsg);
             $infoType = $this->container->xml->getValue('InfoType');
@@ -46,17 +48,20 @@ class EventNotice extends AbstractAPI
         }
         return $result;
     }
-
     /**
      * 处理通知推送的tikect，需要输出success终止
      * @param string $infoType 通知类型
+     * @return Collection
      */
     protected function component_verify_ticket($infoType)
     {
         $cacheKey = $this->container['config']['ticketKey'] . $this->container['config']['appid'];
         $ComponentVerifyTicket = $this->container->xml->getValue('ComponentVerifyTicket');
         $this->container->cache->save($cacheKey, $ComponentVerifyTicket);
-        exit('success');
+        return new Collection([
+            'infoType' => $infoType,
+            'echostr' => 'success',
+        ]);
     }
 
     /**

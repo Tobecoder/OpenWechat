@@ -188,8 +188,67 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate, \JsonS
         return $this->getAll();
     }
 
+    public function __toString()
+    {
+        return $this->toJson();
+    }
+
     public function toJson($option = JSON_UNESCAPED_UNICODE)
     {
         return json_encode($this->getAll(), $option);
+    }
+    /**
+     * Get a data by key.
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        return $this->get($key);
+    }
+
+    /**
+     * Assigns a value to the specified data.
+     *
+     * @param string $key
+     * @param mixed  $value
+     */
+    public function __set($key, $value)
+    {
+        $this->set($key, $value);
+    }
+
+    /**
+     * Whether or not an data exists by key.
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function __isset($key)
+    {
+        return $this->has($key);
+    }
+
+    /**
+     * Unsets an data by key.
+     *
+     * @param string $key
+     */
+    public function __unset($key)
+    {
+        $this->forget($key);
+    }
+
+    /**
+     * var_export.
+     *
+     * @return array
+     */
+    public function __set_state()
+    {
+        return $this->all();
     }
 }
