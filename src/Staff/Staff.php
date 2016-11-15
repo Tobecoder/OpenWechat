@@ -34,11 +34,9 @@ class Staff extends AbstractAPI
 
     public function send($message)
     {
-        trace($message);
         $params = [
             'access_token' => $this->auth->getAuthorizerToken($this->appid)
         ];
-        trace($params);
 
         return $this->parseJSON('json', [self::SEND_MESSAGE_URL . http_build_query($params), $message]);
     }
